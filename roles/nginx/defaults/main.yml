@@ -1,0 +1,4 @@
+---
+# defaults file for roles/nginx
+servicename: nginx
+packagename: nginx

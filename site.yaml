@@ -1,0 +1,8 @@
+---
+- name: Playbook to configure web server
+  hosts: websevers
+  become: true
+
+  roles:
+    - roles/nginx
+    - roles/jboss

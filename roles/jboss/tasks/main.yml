@@ -1,0 +1,70 @@
+---
+# tasks file for roles/jboss
+
+- name: Run the equivalent of "apt-get update" as a separate step
+  ansible.builtin.apt:
+    update_cache: yes
+  when: (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] == "22")
+
+
+- name: Install apache httpd
+  ansible.builtin.apt:
+    name: '{{ packagename }}'
+    state: present
+  when: (ansible_facts['distribution'] == "Ubuntu" and ansible_facts['distribution_major_version'] == "22")
+
+- name: Install common software requirements
+  apt: pkg={{ item }} state=present
+  with_items:
+     - default-jdk
+     - wget
+     - curl
+
+- name: Run shell script
+  ansible.builtin.script: version.sh
+  args:
+    executable: /bin/bash
+  register: script_output
+
+- name: Display script output
+  debug:
+    var: script_output.stdout_lines[0]
+- name: Downloading Jobss Download
+  get_url:
+    url: 'https://github.com/wildfly/wildfly/releases/download/{{ script_output.stdout_lines[0] }}/wildfly-{{ script_output.stdout_lines[0] }}.tar.gz'
+    dest: '/tmp/wildfly-{{ script_output.stdout_lines[0] }}.tar.gz'
+
+- name: Change the working directory to somedir/ and run the command as db_owner if /path/to/database does not exist.
+  command: 'tar -xzf /tmp/wildfly-{{ script_output.stdout_lines[0] }}.tar.gz -C /opt/'
+  args:
+    chdir: /opt
+
+- name: Delete directory if exists
+  file:
+    path: /opt/wildfly
+    state: absent
+  ignore_errors: yes
+
+- name: Stop service if running
+  systemd:
+    name: wildfly
+    state: stopped
+  ignore_errors: yes
+
+- name: Rename directory in /opt
+  command: mv /opt/wildfly-{{ script_output.stdout_lines[0] }} /opt/wildfly
+
+- name: Run shell script
+  ansible.builtin.script: jboss-setup.sh
+  args:
+    executable: /bin/bash
+
+- name: Reload systemd configuration
+  systemd:
+    daemon_reload: yes
+
+- name: Enable and start the service
+  systemd:
+    name: wildfly
+    state: started
+    enabled: yes
