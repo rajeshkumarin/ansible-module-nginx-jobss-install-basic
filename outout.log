@@ -1,0 +1,62 @@
+
+PLAY [Playbook to configure web server] ****************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [roles/nginx : Run the equivalent of "apt-get update" as a separate step] ***
+changed: [localhost]
+
+TASK [roles/nginx : Install apache httpd] **************************************
+ok: [localhost]
+
+TASK [roles/nginx : Working with Nginx Templates] ******************************
+ok: [localhost]
+
+TASK [roles/nginx : Start service httpd, if not started] ***********************
+ok: [localhost]
+
+TASK [roles/jboss : Run the equivalent of "apt-get update" as a separate step] ***
+changed: [localhost]
+
+TASK [roles/jboss : Install apache httpd] **************************************
+ok: [localhost]
+
+TASK [roles/jboss : Install common software requirements] **********************
+ok: [localhost] => (item=['default-jdk', 'wget', 'curl'])
+
+TASK [roles/jboss : Run shell script] ******************************************
+changed: [localhost]
+
+TASK [roles/jboss : Display script output] *************************************
+ok: [localhost] => {
+    "script_output.stdout_lines[0]": "27.0.1.Final"
+}
+
+TASK [roles/jboss : Downloading Jobss Download] ********************************
+ok: [localhost]
+
+TASK [roles/jboss : Change the working directory to somedir/ and run the command as db_owner if /path/to/database does not exist.] ***
+changed: [localhost]
+
+TASK [roles/jboss : Delete directory if exists] ********************************
+changed: [localhost]
+
+TASK [roles/jboss : Stop service if running] ***********************************
+changed: [localhost]
+
+TASK [roles/jboss : Rename directory in /opt] **********************************
+changed: [localhost]
+
+TASK [roles/jboss : Run shell script] ******************************************
+changed: [localhost]
+
+TASK [roles/jboss : Reload systemd configuration] ******************************
+ok: [localhost]
+
+TASK [roles/jboss : Enable and start the service] ******************************
+changed: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=18   changed=9    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

@@ -1,6 +1,6 @@
 ---
 - name: Playbook to configure web server
-  hosts: websevers
+  hosts: webservers
   become: true
 
   roles:
