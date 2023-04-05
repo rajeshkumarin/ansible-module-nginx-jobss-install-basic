@@ -1,7 +1,8 @@
 # How to use?
 
 ## Prerequisite:
-This ansible role has been written and tested in Ubuntu 22.X only.
+- This ansible role has been written for Ubuntu 22.X
+- This ansible role has been tested Ubuntu 22.X only and Localhost Mode only
 
 ## Step 1 - Update inventory file with IP/username/Password
 
